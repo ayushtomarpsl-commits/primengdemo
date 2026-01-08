@@ -31,8 +31,11 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./features/passthrough-demo').then(m => m.PASSTHROUGH_DEMO_ROUTES),
       },
-      // Add more feature routes here
-      // { path: 'settings', loadChildren: () => import('./features/settings').then(m => m.SETTINGS_ROUTES) },
+      {
+        path: 'settings',
+        loadChildren: () =>
+          import('./features/settings').then(m => m.SETTINGS_ROUTES),
+      },
     ],
   },
   {

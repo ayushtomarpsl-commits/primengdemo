@@ -5,11 +5,12 @@
 
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ButtonComponent } from '../../../ui';
+import { ThemeSwitcherComponent } from '../theme-switcher/theme-switcher.component';
 
 @Component({
   selector: 'layout-header',
   standalone: true,
-  imports: [ButtonComponent],
+  imports: [ButtonComponent, ThemeSwitcherComponent],
   template: `
     <header class="header">
       <div class="header__left">
@@ -22,6 +23,7 @@ import { ButtonComponent } from '../../../ui';
         <h1 class="header__title">{{ title }}</h1>
       </div>
       <div class="header__right">
+        <layout-theme-switcher />
         <ui-button
           icon="pi pi-bell"
           variant="text"

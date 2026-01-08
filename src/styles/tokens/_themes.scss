@@ -1,0 +1,249 @@
+// ============================================
+// Design Tokens: Multiple Themes
+// Theme definitions for the application
+// ============================================
+
+// ========================================
+// ELEMENTARY THEME (Default - Teal/Cyan)
+// ========================================
+[data-theme="elementary"],
+:root {
+  --theme-name: 'Elementary';
+  
+  // Brand Colors
+  --primary-button-gradient: linear-gradient(92.58deg, #00d1cf 0%, #0099c4 100%);
+  --color-primary: #00d1cf;
+  --color-primary-hover: #00b8b6;
+  --color-primary-active: #0099c4;
+  --color-primary-light: rgba(0, 209, 207, 0.1);
+  --color-primary-rgb: 0, 209, 207;
+
+  --color-secondary: #0099c4;
+  --color-secondary-hover: #0088b0;
+  --color-secondary-active: #00779c;
+
+  // Semantic Colors
+  --color-success: #3cc985;
+  --color-success-light: rgba(60, 201, 133, 0.1);
+  --color-warning: #efa64a;
+  --color-warning-light: rgba(239, 166, 74, 0.1);
+  --color-danger: #e56666;
+  --color-danger-light: rgba(229, 102, 102, 0.1);
+  --color-info: #3cbbc9;
+  --color-info-light: rgba(60, 187, 201, 0.1);
+
+  // Accent Colors
+  --lightbluegreen: #3cbbc9;
+  --orange: #efa64a;
+  --green: #3cc985;
+  --red: #e56666;
+
+  // Surface & Background
+  --color-white: #fff;
+  --color-black: #000;
+  --lightgrey: #9b9b9b;
+  --darkgrey: #4a4a4a;
+  --greyborder: #e9e9e9;
+  --grey-background: #fbfbfb;
+  --page-background: #fafafa;
+  --surface-ground: var(--page-background);
+  --surface-card: var(--color-white);
+  --surface-border: var(--greyborder);
+  --surface-hover: var(--grey-background);
+
+  // Text
+  --text-primary: var(--darkgrey);
+  --text-secondary: var(--lightgrey);
+
+  // Shadows
+  --card-box-shadow: 0 1px 3px #2b3b5d4a;
+  --shadow-button: 0 2px 4px rgba(0, 209, 207, 0.2);
+}
+
+// ========================================
+// OCEAN THEME (Blue)
+// ========================================
+[data-theme="ocean"] {
+  --theme-name: 'Ocean';
+  
+  --primary-button-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --color-primary: #667eea;
+  --color-primary-hover: #5a6fd6;
+  --color-primary-active: #764ba2;
+  --color-primary-light: rgba(102, 126, 234, 0.1);
+  --color-primary-rgb: 102, 126, 234;
+
+  --color-secondary: #764ba2;
+  --color-secondary-hover: #6a4392;
+  --color-secondary-active: #5e3b82;
+
+  --lightbluegreen: #667eea;
+  
+  --page-background: #f5f7ff;
+  --grey-background: #eef1ff;
+  --greyborder: #e0e5f5;
+
+  --shadow-button: 0 2px 4px rgba(102, 126, 234, 0.2);
+}
+
+// ========================================
+// SUNSET THEME (Orange/Red)
+// ========================================
+[data-theme="sunset"] {
+  --theme-name: 'Sunset';
+  
+  --primary-button-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --color-primary: #f5576c;
+  --color-primary-hover: #e34d61;
+  --color-primary-active: #d14356;
+  --color-primary-light: rgba(245, 87, 108, 0.1);
+  --color-primary-rgb: 245, 87, 108;
+
+  --color-secondary: #f093fb;
+  --color-secondary-hover: #e085ec;
+  --color-secondary-active: #d077dd;
+
+  --lightbluegreen: #f093fb;
+  --orange: #f5576c;
+  
+  --page-background: #fff8f8;
+  --grey-background: #fff0f2;
+  --greyborder: #ffe0e5;
+
+  --shadow-button: 0 2px 4px rgba(245, 87, 108, 0.2);
+}
+
+// ========================================
+// FOREST THEME (Green)
+// ========================================
+[data-theme="forest"] {
+  --theme-name: 'Forest';
+  
+  --primary-button-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  --color-primary: #11998e;
+  --color-primary-hover: #0f8a80;
+  --color-primary-active: #0d7b72;
+  --color-primary-light: rgba(17, 153, 142, 0.1);
+  --color-primary-rgb: 17, 153, 142;
+
+  --color-secondary: #38ef7d;
+  --color-secondary-hover: #2ed96f;
+  --color-secondary-active: #24c361;
+
+  --lightbluegreen: #11998e;
+  --green: #38ef7d;
+  
+  --page-background: #f5fff8;
+  --grey-background: #e8fff0;
+  --greyborder: #d0f5dc;
+
+  --shadow-button: 0 2px 4px rgba(17, 153, 142, 0.2);
+}
+
+// ========================================
+// ROYAL THEME (Purple/Gold)
+// ========================================
+[data-theme="royal"] {
+  --theme-name: 'Royal';
+  
+  --primary-button-gradient: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  --color-primary: #7c3aed;
+  --color-primary-hover: #6d28d9;
+  --color-primary-active: #5b21b6;
+  --color-primary-light: rgba(124, 58, 237, 0.1);
+  --color-primary-rgb: 124, 58, 237;
+
+  --color-secondary: #a855f7;
+  --color-secondary-hover: #9333ea;
+  --color-secondary-active: #7e22ce;
+
+  --lightbluegreen: #a855f7;
+  --orange: #fbbf24;
+  
+  --page-background: #faf5ff;
+  --grey-background: #f3e8ff;
+  --greyborder: #e9d5ff;
+
+  --shadow-button: 0 2px 4px rgba(124, 58, 237, 0.2);
+}
+
+// ========================================
+// MIDNIGHT THEME (Dark Mode)
+// ========================================
+[data-theme="midnight"] {
+  --theme-name: 'Midnight';
+  
+  --primary-button-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --color-primary: #6366f1;
+  --color-primary-hover: #4f46e5;
+  --color-primary-active: #4338ca;
+  --color-primary-light: rgba(99, 102, 241, 0.15);
+  --color-primary-rgb: 99, 102, 241;
+
+  --color-secondary: #8b5cf6;
+  --color-secondary-hover: #7c3aed;
+  --color-secondary-active: #6d28d9;
+
+  // Semantic Colors for Dark Mode
+  --color-success: #34d399;
+  --color-success-light: rgba(52, 211, 153, 0.15);
+  --color-warning: #fbbf24;
+  --color-warning-light: rgba(251, 191, 36, 0.15);
+  --color-danger: #f87171;
+  --color-danger-light: rgba(248, 113, 113, 0.15);
+  --color-info: #60a5fa;
+  --color-info-light: rgba(96, 165, 250, 0.15);
+
+  --lightbluegreen: #60a5fa;
+  --orange: #fbbf24;
+  --green: #34d399;
+  --red: #f87171;
+
+  // Dark Surface Colors
+  --color-white: #1e1e2e;
+  --color-black: #ffffff;
+  --lightgrey: #a6adc8;
+  --darkgrey: #cdd6f4;
+  --greyborder: #313244;
+  --grey-background: #181825;
+  --page-background: #11111b;
+  --surface-ground: var(--page-background);
+  --surface-card: #1e1e2e;
+  --surface-border: #313244;
+  --surface-hover: #313244;
+
+  // Text for Dark Mode
+  --text-primary: #cdd6f4;
+  --text-secondary: #a6adc8;
+
+  --card-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-button: 0 2px 4px rgba(99, 102, 241, 0.3);
+}
+
+// ========================================
+// CORAL THEME (Warm Pink/Coral)
+// ========================================
+[data-theme="coral"] {
+  --theme-name: 'Coral';
+  
+  --primary-button-gradient: linear-gradient(135deg, #ff6b6b 0%, #ffa07a 100%);
+  --color-primary: #ff6b6b;
+  --color-primary-hover: #fa5252;
+  --color-primary-active: #f03e3e;
+  --color-primary-light: rgba(255, 107, 107, 0.1);
+  --color-primary-rgb: 255, 107, 107;
+
+  --color-secondary: #ffa07a;
+  --color-secondary-hover: #ff8c5a;
+  --color-secondary-active: #ff783a;
+
+  --lightbluegreen: #ffa07a;
+  --orange: #ff6b6b;
+  
+  --page-background: #fff9f7;
+  --grey-background: #fff1ed;
+  --greyborder: #ffe4dc;
+
+  --shadow-button: 0 2px 4px rgba(255, 107, 107, 0.2);
+}
+
