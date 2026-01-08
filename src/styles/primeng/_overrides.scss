@@ -1,0 +1,268 @@
+// ============================================
+// PrimeNG Component Overrides
+// Elementary design system styling
+// ============================================
+
+// Button Overrides - Elementary Gradient Style
+.p-button {
+  font-family: var(--font-family-sans);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-button);
+
+  &.p-button-primary,
+  &:not(.p-button-outlined):not(.p-button-text):not(.p-button-secondary) {
+    background: var(--primary-button-gradient);
+    border: none;
+
+    &:hover {
+      background: linear-gradient(92.58deg, #00b8b6 0%, #0088b0 100%);
+      box-shadow: 0 4px 12px rgba(0, 209, 207, 0.3);
+    }
+
+    &:active {
+      background: linear-gradient(92.58deg, #009997 0%, #00779c 100%);
+    }
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 2px var(--color-primary-light), 0 0 0 4px var(--color-primary);
+  }
+}
+
+// Input Overrides - Elementary Clean Style
+.p-inputtext {
+  font-family: var(--font-family-sans);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--greyborder);
+  padding: var(--spacing-input-y) var(--spacing-input-x);
+  background: var(--color-white);
+  color: var(--darkgrey);
+  transition: all 0.2s ease;
+
+  &::placeholder {
+    color: var(--lightgrey);
+  }
+
+  &:hover {
+    border-color: var(--lightgrey);
+  }
+
+  &:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary);
+  }
+}
+
+// Dropdown/Select Overrides
+.p-select {
+  border-radius: var(--radius-md);
+  border-color: var(--greyborder);
+  background: var(--color-white);
+
+  &:hover {
+    border-color: var(--lightgrey);
+  }
+
+  &:focus,
+  &.p-focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary);
+  }
+}
+
+// Card Overrides - Elementary Shadow
+.p-card {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-box-shadow);
+  border: 1px solid var(--greyborder);
+  background: var(--color-white);
+}
+
+// Table Overrides - Elementary Clean Look
+.p-datatable {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--card-box-shadow);
+  border: 1px solid var(--greyborder);
+
+  .p-datatable-header {
+    background: var(--color-white);
+    border-color: var(--greyborder);
+    padding: var(--spacing-4);
+  }
+
+  .p-datatable-thead > tr > th {
+    background: var(--grey-background);
+    color: var(--darkgrey);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    border-color: var(--greyborder);
+    padding: var(--spacing-3) var(--spacing-4);
+  }
+
+  .p-datatable-tbody > tr {
+    background: var(--color-white);
+    border-color: var(--greyborder);
+
+    > td {
+      padding: var(--spacing-3) var(--spacing-4);
+      color: var(--darkgrey);
+    }
+
+    &:hover {
+      background: var(--grey-background);
+    }
+  }
+}
+
+// Dialog Overrides - Elementary Modal
+.p-dialog {
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  border: none;
+
+  .p-dialog-header {
+    border-bottom: 1px solid var(--greyborder);
+    background: var(--color-white);
+    padding: var(--spacing-4) var(--spacing-6);
+  }
+
+  .p-dialog-content {
+    background: var(--color-white);
+    padding: var(--spacing-6);
+  }
+
+  .p-dialog-footer {
+    border-top: 1px solid var(--greyborder);
+    background: var(--grey-background);
+    padding: var(--spacing-4) var(--spacing-6);
+  }
+}
+
+// Toast Overrides - Elementary Notifications
+.p-toast {
+  .p-toast-message {
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    border: none;
+
+    &.p-toast-message-success {
+      background: var(--color-white);
+      border-left: 4px solid var(--green);
+    }
+
+    &.p-toast-message-info {
+      background: var(--color-white);
+      border-left: 4px solid var(--lightbluegreen);
+    }
+
+    &.p-toast-message-warn {
+      background: var(--color-white);
+      border-left: 4px solid var(--orange);
+    }
+
+    &.p-toast-message-error {
+      background: var(--color-white);
+      border-left: 4px solid var(--red);
+    }
+  }
+}
+
+// Checkbox Overrides
+.p-checkbox {
+  .p-checkbox-box {
+    border-radius: var(--radius-sm);
+    border-color: var(--greyborder);
+
+    &.p-highlight {
+      background: var(--primary-button-gradient);
+      border-color: var(--color-primary);
+    }
+  }
+}
+
+// Radio Button Overrides
+.p-radiobutton {
+  .p-radiobutton-box {
+    border-color: var(--greyborder);
+
+    &.p-highlight {
+      border-color: var(--color-primary);
+      background: var(--color-white);
+
+      .p-radiobutton-icon {
+        background: var(--color-primary);
+      }
+    }
+  }
+}
+
+// Toggle Switch Overrides
+.p-toggleswitch {
+  &.p-toggleswitch-checked {
+    .p-toggleswitch-slider {
+      background: var(--primary-button-gradient);
+    }
+  }
+}
+
+// DatePicker Overrides
+.p-datepicker {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--greyborder);
+
+  .p-datepicker-header {
+    background: var(--grey-background);
+    border-bottom: 1px solid var(--greyborder);
+  }
+
+  .p-datepicker-calendar td > span.p-highlight {
+    background: var(--primary-button-gradient);
+    color: var(--color-white);
+  }
+}
+
+// MultiSelect Overrides
+.p-multiselect {
+  border-radius: var(--radius-md);
+  border-color: var(--greyborder);
+
+  &:hover {
+    border-color: var(--lightgrey);
+  }
+
+  &.p-focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary);
+  }
+
+  .p-multiselect-token {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    border-radius: var(--radius-sm);
+  }
+}
+
+// Custom Scrollbar - Elementary Style
+::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--grey-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--lightgrey);
+  border-radius: var(--radius-full);
+
+  &:hover {
+    background: var(--darkgrey);
+  }
+}

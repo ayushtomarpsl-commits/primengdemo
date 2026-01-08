@@ -1,1 +1,122 @@
-/* You can add global styles to this file, and also import other style files */
+// ============================================
+// Global Styles Entry Point
+// Elementary Design System
+// ============================================
+
+// 1. Design Tokens (CSS Custom Properties)
+@use 'styles/tokens';
+
+// 2. PrimeNG Customizations
+@use 'styles/primeng';
+
+// 3. Base Styles - Elementary
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--darkgrey);
+  background-color: var(--page-background);
+}
+
+// Links - Elementary Style
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--color-primary-hover);
+  }
+}
+
+// Selection - Elementary Accent
+::selection {
+  background: rgba(0, 209, 207, 0.2);
+  color: var(--darkgrey);
+}
+
+// Focus Visible - Accessibility
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+// 4. Utility Classes
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-page);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+// Elementary Text Colors
+.text-primary { color: var(--darkgrey); }
+.text-secondary { color: var(--lightgrey); }
+.text-success { color: var(--green); }
+.text-warning { color: var(--orange); }
+.text-danger { color: var(--red); }
+.text-info { color: var(--lightbluegreen); }
+
+// Elementary Background Colors
+.bg-white { background-color: var(--color-white); }
+.bg-grey { background-color: var(--grey-background); }
+.bg-page { background-color: var(--page-background); }
+
+// Elementary Gradient Text
+.gradient-text {
+  background: var(--primary-button-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// Card Base Style
+.card {
+  background: var(--color-white);
+  border: 1px solid var(--greyborder);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-box-shadow);
+  padding: var(--spacing-6);
+}
+
+// Button Gradient Helper
+.btn-gradient {
+  background: var(--primary-button-gradient);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: var(--spacing-button-y) var(--spacing-button-x);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 209, 207, 0.3);
+  }
+}

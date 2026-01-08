@@ -1,0 +1,46 @@
+// ============================================
+// Design Tokens: Spacing
+// Elementary design system spacing scale
+// ============================================
+
+:root {
+  // Base Spacing Scale (4px increments)
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;   // 4px
+  --spacing-2: 0.5rem;    // 8px
+  --spacing-3: 0.75rem;   // 12px
+  --spacing-4: 1rem;      // 16px
+  --spacing-5: 1.25rem;   // 20px
+  --spacing-6: 1.5rem;    // 24px
+  --spacing-8: 2rem;      // 32px
+  --spacing-10: 2.5rem;   // 40px
+  --spacing-12: 3rem;     // 48px
+  --spacing-16: 4rem;     // 64px
+  --spacing-20: 5rem;     // 80px
+  --spacing-24: 6rem;     // 96px
+
+  // Component Spacing
+  --spacing-input-x: var(--spacing-3);
+  --spacing-input-y: var(--spacing-2);
+  --spacing-button-x: var(--spacing-4);
+  --spacing-button-y: var(--spacing-2);
+  --spacing-card: var(--spacing-6);
+  --spacing-section: var(--spacing-8);
+  --spacing-page: var(--spacing-6);
+
+  // Border Radius - Elementary (softer, more rounded)
+  --radius-none: 0;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-full: 9999px;
+
+  // Shadows - Elementary Style (softer, subtler)
+  --shadow-sm: 0 1px 2px rgba(43, 59, 93, 0.08);
+  --shadow-md: 0 1px 3px #2b3b5d4a;
+  --shadow-lg: 0 4px 12px rgba(43, 59, 93, 0.12);
+  --shadow-xl: 0 8px 24px rgba(43, 59, 93, 0.16);
+  --shadow-button: 0 2px 4px rgba(0, 209, 207, 0.2);
+}
