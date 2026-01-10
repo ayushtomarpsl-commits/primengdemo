@@ -3,7 +3,7 @@
 // AG-Grid implementation with WFX API data
 // ============================================
 
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AgGridAngular } from 'ag-grid-angular';
@@ -14,9 +14,18 @@ import {
   ModuleRegistry,
   AllCommunityModule,
   themeQuartz,
-  Theme
+  Theme as AgGridTheme,
+  CellValueChangedEvent
 } from 'ag-grid-community';
 import { catchError, of, tap } from 'rxjs';
+
+// Import PrimeNG Cell Editors
+import { DatePickerCellEditorComponent } from '../cell-editors/datepicker-cell-editor.component';
+import { InputCellEditorComponent } from '../cell-editors/input-cell-editor.component';
+import { DropdownCellEditorComponent } from '../cell-editors/dropdown-cell-editor.component';
+
+// Import Theme Service for reactive theming
+import { ThemeService } from '../../../../core/services/theme.service';
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -51,7 +60,11 @@ interface ErrorResolutionData {
     <div class="wfx-prime">
       <div class="wfx-prime__header">
         <h2>WFX Prime</h2>
-        <p class="wfx-prime__subtitle">Error Resolution Data Grid powered by AG-Grid</p>
+        <p class="wfx-prime__subtitle">Error Resolution Data Grid powered by AG-Grid with PrimeNG Editors</p>
+        <p class="wfx-prime__hint">
+          <i class="pi pi-info-circle"></i>
+          Double-click on editable cells (File Name, Status columns, Date columns, Error Message) to edit using PrimeNG components
+        </p>
       </div>
 
       @if (loading()) {
@@ -71,7 +84,7 @@ interface ErrorResolutionData {
       <div class="wfx-prime__grid-container">
         <ag-grid-angular
           class="wfx-prime__grid"
-          [theme]="theme"
+          [theme]="agGridTheme()"
           [rowData]="rowData()"
           [columnDefs]="columnDefs"
           [defaultColDef]="defaultColDef"
@@ -79,7 +92,9 @@ interface ErrorResolutionData {
           [pagination]="true"
           [paginationPageSize]="10"
           [paginationPageSizeSelector]="[10, 25, 50]"
+          [stopEditingWhenCellsLoseFocus]="true"
           (gridReady)="onGridReady($event)"
+          (cellValueChanged)="onCellValueChanged($event)"
         />
       </div>
     </div>
@@ -91,12 +106,32 @@ interface ErrorResolutionData {
         font-size: var(--font-size-2xl);
         font-weight: var(--font-weight-semibold);
         color: var(--darkgrey);
+        transition: color 0.3s ease;
       }
     }
 
     .wfx-prime__subtitle {
       color: var(--lightgrey);
+      margin-bottom: var(--spacing-2);
+      transition: color 0.3s ease;
+    }
+
+    .wfx-prime__hint {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-2);
+      color: var(--color-primary);
+      font-size: var(--font-size-sm);
       margin-bottom: var(--spacing-6);
+      padding: var(--spacing-2) var(--spacing-3);
+      background: var(--color-primary-light);
+      border-radius: var(--radius-md);
+      border-left: 3px solid var(--color-primary);
+      transition: all 0.3s ease;
+
+      i {
+        font-size: 1rem;
+      }
     }
 
     .wfx-prime__loading {
@@ -104,10 +139,12 @@ interface ErrorResolutionData {
       align-items: center;
       gap: var(--spacing-3);
       padding: var(--spacing-4);
-      background: #e0f2fe;
+      background: var(--color-primary-light);
       border-radius: var(--radius-md);
       margin-bottom: var(--spacing-4);
-      color: #0369a1;
+      color: var(--color-primary);
+      border-left: 3px solid var(--color-primary);
+      transition: all 0.3s ease;
 
       i {
         font-size: 1.25rem;
@@ -119,10 +156,12 @@ interface ErrorResolutionData {
       align-items: center;
       gap: var(--spacing-3);
       padding: var(--spacing-4);
-      background: #fee2e2;
+      background: rgba(239, 68, 68, 0.1);
       border-radius: var(--radius-md);
       margin-bottom: var(--spacing-4);
-      color: #991b1b;
+      color: var(--red);
+      border-left: 3px solid var(--red);
+      transition: all 0.3s ease;
 
       i {
         font-size: 1.25rem;
@@ -130,17 +169,19 @@ interface ErrorResolutionData {
     }
 
     .wfx-prime__grid-container {
-      background: var(--color-white);
+      background: var(--surface-card);
       border: 1px solid var(--greyborder);
       border-radius: var(--radius-lg);
       box-shadow: var(--card-box-shadow);
       padding: var(--spacing-4);
       overflow: hidden;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
     }
 
     .wfx-prime__grid {
       width: 100%;
       height: 600px;
+      transition: all 0.3s ease;
     }
 
     :host ::ng-deep {
@@ -175,6 +216,28 @@ interface ErrorResolutionData {
         color: #991b1b;
         font-weight: 500;
       }
+
+      // Editable cell indicator
+      .editable-cell {
+        // background: linear-gradient(135deg, transparent 85%, #6366f1 85%) !important;
+        cursor: pointer;
+
+        // &:hover {
+        //   background: linear-gradient(135deg, #f1f5f9 85%, #6366f1 85%) !important;
+        // }
+      }
+
+      // AG Grid cell editor popup styling
+      .ag-cell-edit-wrapper {
+        padding: 0;
+      }
+
+      .ag-popup-editor {
+        border: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border-radius: 6px;
+        overflow: visible;
+      }
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -182,19 +245,70 @@ interface ErrorResolutionData {
 export class WfxPrimeComponent implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly route = inject(ActivatedRoute);
+  private readonly themeService = inject(ThemeService);
   private gridApi!: GridApi;
 
-  // AG Grid Theme - using new Theming API
-  readonly theme: Theme = themeQuartz.withParams({
-    headerBackgroundColor: '#f8fafc',
-    headerTextColor: '#334155',
-    oddRowBackgroundColor: '#fafbfc',
-    rowHoverColor: '#e0f2fe',
-    selectedRowBackgroundColor: '#dbeafe',
-    fontSize: 14,
-    borderColor: '#e2e8f0',
-    rowBorder: { color: '#f1f5f9', width: 1, style: 'solid' },
+  // ============================================
+  // AG Grid Theme - REACTIVE to App Theme Changes
+  // ============================================
+  // This computed signal automatically updates when app theme changes
+  readonly agGridTheme = computed<AgGridTheme>(() => {
+    const currentTheme = this.themeService.currentTheme();
+    const isDark = currentTheme.id === 'midnight';
+    
+    // Get theme colors for dynamic theming
+    const themeColors = this.getAgGridThemeColors(currentTheme.id, isDark);
+    
+    return themeQuartz.withParams(themeColors);
   });
+
+  // Theme color configurations for each app theme
+  private getAgGridThemeColors(themeId: string, isDark: boolean) {
+    // Dark theme (Midnight)
+    if (isDark) {
+      return {
+        backgroundColor: '#1e1e2e',
+        foregroundColor: '#cdd6f4',
+        headerBackgroundColor: '#181825',
+        headerTextColor: '#cdd6f4',
+        oddRowBackgroundColor: '#1e1e2e',
+        rowHoverColor: '#313244',
+        selectedRowBackgroundColor: '#45475a',
+        borderColor: '#45475a',
+        fontSize: 14,
+        rowBorder: { color: '#313244', width: 1, style: 'solid' as const },
+        // Accent color based on theme
+        accentColor: '#6366f1',
+      };
+    }
+
+    // Light themes with different accent colors
+    const themeAccentColors: Record<string, { primary: string; hover: string; selected: string }> = {
+      elementary: { primary: '#00d1cf', hover: '#e0f7f6', selected: '#b2ebea' },
+      ocean: { primary: '#667eea', hover: '#eef0fc', selected: '#d4d9f7' },
+      sunset: { primary: '#f5576c', hover: '#feeced', selected: '#fcd4d9' },
+      forest: { primary: '#11998e', hover: '#e6f5f4', selected: '#c2e8e5' },
+      royal: { primary: '#7c3aed', hover: '#f3effe', selected: '#e4d9fc' },
+      coral: { primary: '#ff6b6b', hover: '#ffeaea', selected: '#ffd1d1' },
+    };
+
+    const colors = themeAccentColors[themeId] || themeAccentColors['elementary'];
+
+    return {
+      backgroundColor: '#ffffff',
+      foregroundColor: '#1e293b',
+      headerBackgroundColor: '#f8fafc',
+      headerTextColor: '#334155',
+      oddRowBackgroundColor: '#fafbfc',
+      rowHoverColor: colors.hover,
+      selectedRowBackgroundColor: colors.selected,
+      borderColor: '#e2e8f0',
+      fontSize: 14,
+      rowBorder: { color: '#f1f5f9', width: 1, style: 'solid' as const },
+      // Accent color based on theme
+      accentColor: colors.primary,
+    };
+  }
 
   // Signals for reactive state
   readonly rowData = signal<ErrorResolutionData[]>([]);
@@ -208,6 +322,7 @@ export class WfxPrimeComponent implements OnInit {
   private readonly API_URL = 'https://wfxqa.worldfashionexchange.com/WFXDotNetCoreAPI/WFXWebAIAPI/api/WFXAI/GetErrorResolutionData';
 
   // Column definitions based on API response structure
+  // Using PrimeNG components for cell editing
   columnDefs: ColDef<ErrorResolutionData>[] = [
     { 
       field: 'EDIPackageImportID', 
@@ -220,7 +335,11 @@ export class WfxPrimeComponent implements OnInit {
       headerName: 'File Name',
       flex: 1,
       minWidth: 250,
-      filter: 'agTextColumnFilter'
+      filter: 'agTextColumnFilter',
+      // ✅ EDITABLE with PrimeNG InputText
+      editable: true,
+      cellEditor: InputCellEditorComponent,
+      cellClass: 'editable-cell'
     },
     { 
       field: 'filetype', 
@@ -237,76 +356,119 @@ export class WfxPrimeComponent implements OnInit {
     { 
       field: 'status', 
       headerName: 'Status',
-      width: 120,
+      width: 140,
       cellRenderer: (params: { value: string }) => {
         const status = params.value?.toLowerCase();
         const statusClass = status === 'completed' ? 'status-success' : 
                            status === 'failed' ? 'status-error' : 'status-pending';
         return `<span class="${statusClass}">${params.value || ''}</span>`;
       },
-      filter: 'agTextColumnFilter'
+      filter: 'agTextColumnFilter',
+      // ✅ EDITABLE with PrimeNG Dropdown
+      editable: true,
+      cellEditor: DropdownCellEditorComponent,
+      cellEditorParams: {
+        options: [
+          { label: 'Completed', value: 'completed' },
+          { label: 'Pending', value: 'pending' },
+          { label: 'Failed', value: 'failed' },
+          { label: 'In Progress', value: 'in_progress' }
+        ]
+      },
+      cellClass: 'editable-cell'
     },
     { 
       field: 'TransactionStatus', 
       headerName: 'Transaction Status',
-      width: 150,
+      width: 160,
       cellRenderer: (params: { value: string }) => {
         const status = params.value?.toLowerCase();
         const statusClass = status === 'success' ? 'status-success' : 
                            status === 'failed' ? 'status-error' : 'status-pending';
         return `<span class="${statusClass}">${params.value || ''}</span>`;
       },
-      filter: 'agTextColumnFilter'
+      filter: 'agTextColumnFilter',
+      // ✅ EDITABLE with PrimeNG Dropdown
+      editable: true,
+      cellEditor: DropdownCellEditorComponent,
+      cellEditorParams: {
+        options: [
+          { label: 'Success', value: 'Success' },
+          { label: 'Failed', value: 'Failed' },
+          { label: 'Pending', value: 'Pending' }
+        ]
+      },
+      cellClass: 'editable-cell'
     },
     { 
       field: 'DataImported', 
       headerName: 'Data Imported',
-      width: 130,
+      width: 140,
       cellRenderer: (params: { value: string }) => {
         const status = params.value?.toLowerCase();
         const statusClass = status === 'success' ? 'status-success' : 
                            status === 'failed' ? 'status-error' : 'status-pending';
         return `<span class="${statusClass}">${params.value || ''}</span>`;
       },
-      filter: 'agTextColumnFilter'
+      filter: 'agTextColumnFilter',
+      // ✅ EDITABLE with PrimeNG Dropdown
+      editable: true,
+      cellEditor: DropdownCellEditorComponent,
+      cellClass: 'editable-cell'
     },
     { 
       field: 'DataValidated', 
       headerName: 'Data Validated',
-      width: 130,
+      width: 140,
       cellRenderer: (params: { value: string }) => {
         const status = params.value?.toLowerCase();
         const statusClass = status === 'success' ? 'status-success' : 
                            status === 'failed' ? 'status-error' : 'status-pending';
         return `<span class="${statusClass}">${params.value || ''}</span>`;
       },
-      filter: 'agTextColumnFilter'
+      filter: 'agTextColumnFilter',
+      // ✅ EDITABLE with PrimeNG Dropdown
+      editable: true,
+      cellEditor: DropdownCellEditorComponent,
+      cellClass: 'editable-cell'
     },
     { 
       field: 'MappingResolved', 
       headerName: 'Mapping Resolved',
-      width: 150,
+      width: 160,
       cellRenderer: (params: { value: string }) => {
         const status = params.value?.toLowerCase();
         const statusClass = status === 'success' ? 'status-success' : 
                            status === 'failed' ? 'status-error' : 'status-pending';
         return `<span class="${statusClass}">${params.value || ''}</span>`;
       },
-      filter: 'agTextColumnFilter'
+      filter: 'agTextColumnFilter',
+      // ✅ EDITABLE with PrimeNG Dropdown
+      editable: true,
+      cellEditor: DropdownCellEditorComponent,
+      cellClass: 'editable-cell'
     },
     { 
       field: 'uploadedOn', 
       headerName: 'Uploaded On',
-      width: 170,
+      width: 180,
       valueFormatter: params => params.value ? new Date(params.value).toLocaleString() : '',
-      filter: 'agDateColumnFilter'
+      filter: 'agDateColumnFilter',
+      // ✅ EDITABLE with PrimeNG DatePicker
+      editable: true,
+      cellEditor: DatePickerCellEditorComponent,
+      cellClass: 'editable-cell'
     },
     { 
       field: 'processedOn', 
       headerName: 'Processed On',
-      width: 170,
+      width: 180,
       valueFormatter: params => params.value ? new Date(params.value).toLocaleString() : '',
-      filter: 'agDateColumnFilter'
+      filter: 'agDateColumnFilter',
+      // ✅ EDITABLE with PrimeNG DatePicker
+      editable: true,
+      cellEditor: DatePickerCellEditorComponent,
+      cellClass: 'editable-cell'
     },
     { 
       field: 'TransactionType', 
@@ -343,8 +505,11 @@ export class WfxPrimeComponent implements OnInit {
       headerName: 'Error Message',
       flex: 1,
       minWidth: 200,
-      cellClass: (params) => params.value ? 'error-cell' : '',
-      filter: 'agTextColumnFilter'
+      cellClass: (params) => params.value ? 'error-cell editable-cell' : 'editable-cell',
+      filter: 'agTextColumnFilter',
+      // ✅ EDITABLE with PrimeNG InputText
+      editable: true,
+      cellEditor: InputCellEditorComponent
     },
   ];
 
@@ -415,5 +580,19 @@ export class WfxPrimeComponent implements OnInit {
     if (this.rowData().length > 0) {
       this.gridApi.sizeColumnsToFit();
     }
+  }
+
+  // Handle cell value changes from PrimeNG editors
+  onCellValueChanged(event: CellValueChangedEvent): void {
+    console.log('Cell Value Changed:', {
+      field: event.colDef.field,
+      oldValue: event.oldValue,
+      newValue: event.newValue,
+      rowData: event.data
+    });
+
+    // Here you can implement API call to save the changes
+    // Example:
+    // this.saveChanges(event.data);
   }
 }
