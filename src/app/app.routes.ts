@@ -36,6 +36,11 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./features/settings').then(m => m.SETTINGS_ROUTES),
       },
+      {
+        path: 'wfx-prime',
+        loadChildren: () =>
+          import('./features/wfx-prime').then(m => m.WFX_PRIME_ROUTES),
+      },
     ],
   },
   {
