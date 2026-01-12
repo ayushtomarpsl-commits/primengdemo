@@ -1,6 +1,7 @@
 // ============================================
 // UI DatePicker Component
 // PrimeNG DatePicker wrapper - upgrade-safe abstraction
+// Using PT (Pass Through) for styling - NO ng-deep!
 // ============================================
 
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, forwardRef } from '@angular/core';
@@ -28,14 +29,12 @@ import { DatePickerModule } from 'primeng/datepicker';
       [styleClass]="styleClass"
       [inputStyleClass]="'w-full'"
       (onSelect)="onSelect.emit($event)"
+      [pt]="datepickerPT"
     />
   `,
   styles: [`
     :host {
       display: block;
-    }
-    :host ::ng-deep .p-datepicker {
-      width: 100%;
     }
   `],
   providers: [
@@ -64,6 +63,15 @@ export class DatePickerComponent implements ControlValueAccessor {
 
   value: Date | Date[] | null = null;
 
+  // PT (Pass Through) for styling - replaces ::ng-deep
+  datepickerPT = {
+    root: {
+      style: {
+        width: '100%'
+      }
+    }
+  };
+
   private onChangeFn: (value: Date | Date[] | null) => void = () => {};
   private onTouchedFn: () => void = () => {};
 
@@ -89,4 +97,3 @@ export class DatePickerComponent implements ControlValueAccessor {
     this.onTouchedFn();
   }
 }
-

@@ -1,6 +1,7 @@
 // ============================================
 // Passthrough Demo Component
 // Showcases PrimeNG passthrough feature for deep customization
+// Using PT with STYLE objects - NO ng-deep!
 // ============================================
 
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
@@ -44,52 +45,33 @@ interface Product {
     <div class="passthrough-demo">
       <div class="demo-header">
         <h2>PrimeNG Passthrough Demo</h2>
-        <p>Customize internal DOM elements using the <code>pt</code> property</p>
+        <p>Customize internal DOM elements using the <code>pt</code> property with <strong>style objects</strong> (no ng-deep!)</p>
       </div>
 
       <!-- Button with Passthrough -->
       <section class="demo-section">
         <h3><i class="pi pi-bolt"></i> Buttons with Passthrough</h3>
-        <p class="section-desc">Custom styling applied to button's internal elements</p>
+        <p class="section-desc">Custom styling applied to button's internal elements using PT style objects</p>
         
         <div class="demo-row">
           <p-button
             label="Gradient Button"
             icon="pi pi-sparkles"
-            [pt]="{
-              root: {
-                class: 'custom-gradient-btn',
-                'data-testid': 'gradient-button'
-              },
-              label: {
-                class: 'custom-btn-label'
-              },
-              icon: {
-                class: 'custom-btn-icon'
-              }
-            }"
+            [pt]="gradientButtonPT"
           />
 
           <p-button
             label="Outlined Glow"
             icon="pi pi-star"
             [outlined]="true"
-            [pt]="{
-              root: {
-                class: 'custom-outlined-glow'
-              }
-            }"
+            [pt]="outlinedGlowButtonPT"
           />
 
           <p-button
             label="Pill Button"
             icon="pi pi-check"
             severity="success"
-            [pt]="{
-              root: {
-                class: 'custom-pill-btn'
-              }
-            }"
+            [pt]="pillButtonPT"
           />
         </div>
       </section>
@@ -105,12 +87,7 @@ interface Product {
             <input
               pInputText
               placeholder="Type something..."
-              [pt]="{
-                root: {
-                  class: 'custom-input-animated',
-                  'data-placeholder': 'Type something...'
-                }
-              }"
+              [pt]="animatedInputPT"
             />
           </div>
 
@@ -121,11 +98,7 @@ interface Product {
               <input
                 pInputText
                 placeholder="Search..."
-                [pt]="{
-                  root: {
-                    class: 'custom-search-input'
-                  }
-                }"
+                [pt]="searchInputPT"
               />
             </div>
           </div>
@@ -145,23 +118,7 @@ interface Product {
               [options]="cities"
               optionLabel="name"
               placeholder="Select a City"
-              [pt]="{
-                root: {
-                  class: 'custom-select-root'
-                },
-                label: {
-                  class: 'custom-select-label'
-                },
-                dropdown: {
-                  class: 'custom-select-trigger'
-                },
-                listContainer: {
-                  class: 'custom-select-panel'
-                },
-                option: {
-                  class: 'custom-select-item'
-                }
-              }"
+              [pt]="selectPT"
             />
           </div>
         </div>
@@ -181,7 +138,7 @@ interface Product {
               [showButtonBar]="true"
               dateFormat="dd/mm/yy"
               placeholder="Pick a date"
-              [pt]="datepickerPt"
+              [pt]="datepickerPT"
             />
           </div>
         </div>
@@ -194,7 +151,7 @@ interface Product {
         
         <p-table
           [value]="products"
-          [pt]="tablePt"
+          [pt]="tablePT"
         >
           <ng-template #header>
             <tr>
@@ -232,18 +189,14 @@ interface Product {
                   [rounded]="true"
                   [text]="true"
                   pTooltip="View Details"
-                  [pt]="{
-                    root: { class: 'action-btn action-btn--view' }
-                  }"
+                  [pt]="viewActionButtonPT"
                 />
                 <p-button
                   icon="pi pi-pencil"
                   [rounded]="true"
                   [text]="true"
                   pTooltip="Edit"
-                  [pt]="{
-                    root: { class: 'action-btn action-btn--edit' }
-                  }"
+                  [pt]="editActionButtonPT"
                 />
                 <p-button
                   icon="pi pi-trash"
@@ -251,9 +204,7 @@ interface Product {
                   [text]="true"
                   severity="danger"
                   pTooltip="Delete"
-                  [pt]="{
-                    root: { class: 'action-btn action-btn--delete' }
-                  }"
+                  [pt]="deleteActionButtonPT"
                 />
               </td>
             </tr>
@@ -270,26 +221,7 @@ interface Product {
           <p-card
             header="Analytics"
             subheader="Monthly Report"
-            [pt]="{
-              root: {
-                class: 'custom-card-root custom-card--analytics'
-              },
-              header: {
-                class: 'custom-card-header'
-              },
-              title: {
-                class: 'custom-card-title'
-              },
-              subtitle: {
-                class: 'custom-card-subtitle'
-              },
-              body: {
-                class: 'custom-card-body'
-              },
-              content: {
-                class: 'custom-card-content'
-              }
-            }"
+            [pt]="analyticsCardPT"
           >
             <div class="card-stat">
               <span class="stat-value">12,543</span>
@@ -301,20 +233,7 @@ interface Product {
           <p-card
             header="Revenue"
             subheader="This Quarter"
-            [pt]="{
-              root: {
-                class: 'custom-card-root custom-card--revenue'
-              },
-              header: {
-                class: 'custom-card-header'
-              },
-              title: {
-                class: 'custom-card-title'
-              },
-              body: {
-                class: 'custom-card-body'
-              }
-            }"
+            [pt]="revenueCardPT"
           >
             <div class="card-stat">
               <span class="stat-value">$84,230</span>
@@ -326,20 +245,7 @@ interface Product {
           <p-card
             header="Orders"
             subheader="Pending"
-            [pt]="{
-              root: {
-                class: 'custom-card-root custom-card--orders'
-              },
-              header: {
-                class: 'custom-card-header'
-              },
-              title: {
-                class: 'custom-card-title'
-              },
-              body: {
-                class: 'custom-card-body'
-              }
-            }"
+            [pt]="ordersCardPT"
           >
             <div class="card-stat">
               <span class="stat-value">156</span>
@@ -352,23 +258,26 @@ interface Product {
 
       <!-- Code Example -->
       <section class="demo-section code-section">
-        <h3><i class="pi pi-code"></i> Usage Example</h3>
-        <pre class="code-block"><code>&lt;p-button
-  label="Custom Button"
-  [pt]="&#123;
-    root: &#123;
-      class: 'my-custom-class',
-      style: &#123; '--custom-var': 'value' &#125;,
-      'data-testid': 'my-button'
-    &#125;,
-    label: &#123;
-      class: 'my-label-class'
-    &#125;,
-    icon: &#123;
-      class: 'my-icon-class'
+        <h3><i class="pi pi-code"></i> Usage Example (Correct Way - Style Objects)</h3>
+        <pre class="code-block"><code>// Define PT object with STYLE (not class!)
+buttonPT = &#123;
+  root: &#123;
+    style: &#123;
+      background: 'linear-gradient(...)',
+      borderRadius: '12px',
+      padding: '12px 24px'
     &#125;
-  &#125;"
-/&gt;</code></pre>
+  &#125;,
+  label: &#123;
+    style: &#123;
+      fontWeight: '600',
+      letterSpacing: '0.5px'
+    &#125;
+  &#125;
+&#125;;
+
+// In template
+&lt;p-button label="Custom" [pt]="buttonPT" /&gt;</code></pre>
       </section>
     </div>
   `,
@@ -403,11 +312,15 @@ interface Product {
           font-family: var(--font-family-mono);
           color: var(--color-primary);
         }
+
+        strong {
+          color: var(--green);
+        }
       }
     }
 
     .demo-section {
-      background: var(--color-white);
+      background: var(--surface-card);
       border: 1px solid var(--greyborder);
       border-radius: var(--radius-lg);
       padding: var(--spacing-6);
@@ -474,186 +387,7 @@ interface Product {
       }
     }
 
-    // ========================================
-    // PASSTHROUGH CUSTOM STYLES
-    // ========================================
-
-    // Custom Gradient Button
-    :host ::ng-deep .custom-gradient-btn {
-      background: var(--primary-button-gradient) !important;
-      border: none !important;
-      border-radius: var(--radius-lg) !important;
-      padding: 12px 24px !important;
-      box-shadow: 0 4px 15px rgba(0, 209, 207, 0.4) !important;
-      transition: all 0.3s ease !important;
-
-      &:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 6px 20px rgba(0, 209, 207, 0.5) !important;
-      }
-    }
-
-    :host ::ng-deep .custom-btn-label {
-      font-weight: 600 !important;
-      letter-spacing: 0.5px !important;
-    }
-
-    :host ::ng-deep .custom-btn-icon {
-      animation: sparkle 1.5s ease-in-out infinite !important;
-    }
-
-    @keyframes sparkle {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    // Custom Outlined Glow Button
-    :host ::ng-deep .custom-outlined-glow {
-      border: 2px solid var(--lightbluegreen) !important;
-      color: var(--lightbluegreen) !important;
-      border-radius: var(--radius-lg) !important;
-      transition: all 0.3s ease !important;
-
-      &:hover {
-        background: rgba(60, 187, 201, 0.1) !important;
-        box-shadow: 0 0 20px rgba(60, 187, 201, 0.4) !important;
-      }
-    }
-
-    // Custom Pill Button
-    :host ::ng-deep .custom-pill-btn {
-      border-radius: 50px !important;
-      padding: 10px 28px !important;
-    }
-
-    // Custom Input with Animation
-    :host ::ng-deep .custom-input-animated {
-      border: 2px solid var(--greyborder) !important;
-      border-radius: var(--radius-md) !important;
-      padding: 12px 16px !important;
-      transition: all 0.3s ease !important;
-      width: 100% !important;
-
-      &:focus {
-        border-color: var(--color-primary) !important;
-        box-shadow: 0 0 0 4px rgba(0, 209, 207, 0.15) !important;
-        outline: none !important;
-      }
-    }
-
-    // Custom Search Input
-    :host ::ng-deep .custom-search-input {
-      padding-left: 40px !important;
-      border-radius: 50px !important;
-      border: 2px solid var(--greyborder) !important;
-      width: 100% !important;
-      transition: all 0.3s ease !important;
-
-      &:focus {
-        border-color: var(--lightbluegreen) !important;
-        box-shadow: 0 0 0 4px rgba(60, 187, 201, 0.15) !important;
-      }
-    }
-
-    // Custom Select
-    :host ::ng-deep .custom-select-root {
-      border-radius: var(--radius-md) !important;
-      border: 2px solid var(--greyborder) !important;
-      min-width: 250px !important;
-      transition: all 0.3s ease !important;
-
-      &:hover {
-        border-color: var(--lightgrey) !important;
-      }
-
-      &.p-focus {
-        border-color: var(--color-primary) !important;
-        box-shadow: 0 0 0 4px rgba(0, 209, 207, 0.15) !important;
-      }
-    }
-
-    :host ::ng-deep .custom-select-trigger {
-      background: var(--primary-button-gradient) !important;
-      border-radius: 0 var(--radius-sm) var(--radius-sm) 0 !important;
-    }
-
-    :host ::ng-deep .custom-select-item {
-      transition: all 0.2s ease !important;
-      border-radius: var(--radius-sm) !important;
-      margin: 2px 4px !important;
-
-      &:hover {
-        background: linear-gradient(92.58deg, rgba(0, 209, 207, 0.1) 0%, rgba(0, 153, 196, 0.1) 100%) !important;
-      }
-
-      &.p-select-option-selected {
-        background: var(--primary-button-gradient) !important;
-        color: white !important;
-      }
-    }
-
-    // Custom DatePicker
-    :host ::ng-deep .custom-datepicker-root {
-      width: 100% !important;
-    }
-
-    :host ::ng-deep .custom-datepicker-input {
-      border-radius: var(--radius-md) !important;
-      border: 2px solid var(--greyborder) !important;
-    }
-
-    :host ::ng-deep .custom-datepicker-icon {
-      color: var(--color-primary) !important;
-    }
-
-    :host ::ng-deep .custom-datepicker-panel {
-      border-radius: var(--radius-lg) !important;
-      box-shadow: var(--shadow-xl) !important;
-      border: 1px solid var(--greyborder) !important;
-    }
-
-    :host ::ng-deep .custom-datepicker-header {
-      background: var(--primary-button-gradient) !important;
-      color: white !important;
-      border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;
-    }
-
-    // Custom Table
-    :host ::ng-deep .custom-table-root {
-      border-radius: var(--radius-lg) !important;
-      overflow: hidden !important;
-      border: 1px solid var(--greyborder) !important;
-    }
-
-    :host ::ng-deep .custom-header-row {
-      background: linear-gradient(92.58deg, rgba(0, 209, 207, 0.05) 0%, rgba(0, 153, 196, 0.05) 100%) !important;
-    }
-
-    :host ::ng-deep .custom-header-cell {
-      background: transparent !important;
-      color: var(--darkgrey) !important;
-      font-weight: 600 !important;
-      text-transform: uppercase !important;
-      font-size: 12px !important;
-      letter-spacing: 0.5px !important;
-      padding: 16px !important;
-      border-bottom: 2px solid var(--color-primary) !important;
-    }
-
-    :host ::ng-deep .custom-body-row {
-      transition: all 0.2s ease !important;
-
-      &:hover {
-        background: var(--grey-background) !important;
-      }
-    }
-
-    :host ::ng-deep .custom-body-cell {
-      padding: 16px !important;
-      border-bottom: 1px solid var(--greyborder) !important;
-    }
-
-    // Table Content Styling
+    // Table Content Styling (local styles - no ng-deep needed)
     .product-name {
       font-weight: var(--font-weight-medium);
       color: var(--darkgrey);
@@ -694,76 +428,6 @@ interface Product {
       }
     }
 
-    :host ::ng-deep .action-btn {
-      width: 32px !important;
-      height: 32px !important;
-      transition: all 0.2s ease !important;
-
-      &--view:hover {
-        background: rgba(60, 187, 201, 0.15) !important;
-        color: var(--lightbluegreen) !important;
-      }
-
-      &--edit:hover {
-        background: rgba(239, 166, 74, 0.15) !important;
-        color: var(--orange) !important;
-      }
-
-      &--delete:hover {
-        background: rgba(229, 102, 102, 0.15) !important;
-        color: var(--red) !important;
-      }
-    }
-
-    // Custom Cards
-    :host ::ng-deep .custom-card-root {
-      border-radius: var(--radius-xl) !important;
-      overflow: hidden !important;
-      border: none !important;
-      box-shadow: var(--shadow-lg) !important;
-      transition: all 0.3s ease !important;
-
-      &:hover {
-        transform: translateY(-4px) !important;
-        box-shadow: var(--shadow-xl) !important;
-      }
-    }
-
-    :host ::ng-deep .custom-card--analytics .custom-card-header {
-      background: var(--primary-button-gradient) !important;
-      padding: 20px !important;
-    }
-
-    :host ::ng-deep .custom-card--revenue .custom-card-header {
-      background: linear-gradient(135deg, var(--green) 0%, #2da06b 100%) !important;
-      padding: 20px !important;
-    }
-
-    :host ::ng-deep .custom-card--orders .custom-card-header {
-      background: linear-gradient(135deg, var(--orange) 0%, #d4902f 100%) !important;
-      padding: 20px !important;
-    }
-
-    :host ::ng-deep .custom-card-title {
-      color: white !important;
-      font-size: var(--font-size-lg) !important;
-      font-weight: var(--font-weight-bold) !important;
-      margin: 0 !important;
-    }
-
-    :host ::ng-deep .custom-card-subtitle {
-      color: rgba(255, 255, 255, 0.8) !important;
-      font-size: var(--font-size-sm) !important;
-    }
-
-    :host ::ng-deep .custom-card-body {
-      padding: 0 !important;
-    }
-
-    :host ::ng-deep .custom-card-content {
-      padding: var(--spacing-6) !important;
-    }
-
     .card-stat {
       display: flex;
       flex-direction: column;
@@ -796,13 +460,13 @@ interface Product {
 
     // Code Block
     .code-section {
-      background: var(--darkgrey) !important;
+      background: var(--darkgrey);
 
       h3 {
-        color: var(--color-white) !important;
+        color: var(--color-white);
 
         i {
-          color: var(--lightbluegreen) !important;
+          color: var(--lightbluegreen);
         }
       }
     }
@@ -828,24 +492,338 @@ export class PassthroughDemoComponent {
   selectedCity: any = null;
   selectedDate: Date | null = null;
 
-  // Passthrough objects with 'any' to bypass strict type checking for demo purposes
-  datepickerPt: any = {
-    root: { class: 'custom-datepicker-root' },
-    inputIcon: { class: 'custom-datepicker-icon' },
-    panel: { class: 'custom-datepicker-panel' },
-    header: { class: 'custom-datepicker-header' },
-    dayLabel: { class: 'custom-day-label' }
+  // ============================================
+  // PT OBJECTS WITH STYLE (NO ng-deep needed!)
+  // ============================================
+
+  // Gradient Button PT
+  gradientButtonPT = {
+    root: {
+      style: {
+        background: 'linear-gradient(92.58deg, #00d1cf 0%, #0099c4 100%)',
+        border: 'none',
+        borderRadius: '12px',
+        padding: '12px 24px',
+        boxShadow: '0 4px 15px rgba(0, 209, 207, 0.4)',
+        transition: 'all 0.3s ease'
+      }
+    },
+    label: {
+      style: {
+        fontWeight: '600',
+        letterSpacing: '0.5px'
+      }
+    }
   };
 
-  tablePt: any = {
-    root: { class: 'custom-table-root' },
-    tableContainer: { class: 'custom-table-container' },
-    thead: { class: 'custom-table-thead' },
-    headerRow: { class: 'custom-header-row' },
-    headerCell: { class: 'custom-header-cell' },
-    tbody: { class: 'custom-table-tbody' },
-    bodyRow: { class: 'custom-body-row' },
-    bodyCell: { class: 'custom-body-cell' }
+  // Outlined Glow Button PT
+  outlinedGlowButtonPT = {
+    root: {
+      style: {
+        border: '2px solid #3cbbc9',
+        color: '#3cbbc9',
+        borderRadius: '12px',
+        transition: 'all 0.3s ease'
+      }
+    }
+  };
+
+  // Pill Button PT
+  pillButtonPT = {
+    root: {
+      style: {
+        borderRadius: '50px',
+        padding: '10px 28px'
+      }
+    }
+  };
+
+  // Animated Input PT
+  animatedInputPT = {
+    root: {
+      style: {
+        border: '2px solid var(--greyborder)',
+        borderRadius: '8px',
+        padding: '12px 16px',
+        transition: 'all 0.3s ease',
+        width: '100%'
+      }
+    }
+  };
+
+  // Search Input PT
+  searchInputPT = {
+    root: {
+      style: {
+        paddingLeft: '40px',
+        borderRadius: '50px',
+        border: '2px solid var(--greyborder)',
+        width: '100%',
+        transition: 'all 0.3s ease'
+      }
+    }
+  };
+
+  // Select PT
+  selectPT = {
+    root: {
+      style: {
+        borderRadius: '8px',
+        border: '2px solid var(--greyborder)',
+        minWidth: '250px',
+        transition: 'all 0.3s ease'
+      }
+    },
+    dropdown: {
+      style: {
+        background: 'linear-gradient(92.58deg, #00d1cf 0%, #0099c4 100%)',
+        borderRadius: '0 6px 6px 0'
+      }
+    },
+    option: {
+      style: {
+        transition: 'all 0.2s ease',
+        borderRadius: '4px',
+        margin: '2px 4px'
+      }
+    }
+  };
+
+  // DatePicker PT
+  datepickerPT = {
+    root: {
+      style: {
+        width: '100%'
+      }
+    },
+    pcInput: {
+      root: {
+        style: {
+          borderRadius: '8px',
+          border: '2px solid var(--greyborder)'
+        }
+      }
+    },
+    dropdown: {
+      root: {
+        style: {
+          background: 'linear-gradient(92.58deg, #00d1cf 0%, #0099c4 100%)'
+        }
+      }
+    },
+    panel: {
+      style: {
+        borderRadius: '12px',
+        boxShadow: '0 10px 40px rgba(0, 0, 0, 0.15)',
+        border: '1px solid var(--greyborder)'
+      }
+    },
+    header: {
+      style: {
+        background: 'linear-gradient(92.58deg, #00d1cf 0%, #0099c4 100%)',
+        color: 'white',
+        borderRadius: '12px 12px 0 0'
+      }
+    }
+  };
+
+  // Table PT
+  tablePT = {
+    root: {
+      style: {
+        borderRadius: '12px',
+        overflow: 'hidden',
+        border: '1px solid var(--greyborder)'
+      }
+    },
+    headerRow: {
+      style: {
+        background: 'linear-gradient(92.58deg, rgba(0, 209, 207, 0.05) 0%, rgba(0, 153, 196, 0.05) 100%)'
+      }
+    },
+    headerCell: {
+      style: {
+        background: 'transparent',
+        color: 'var(--darkgrey)',
+        fontWeight: '600',
+        textTransform: 'uppercase',
+        fontSize: '12px',
+        letterSpacing: '0.5px',
+        padding: '16px',
+        borderBottom: '2px solid var(--color-primary)'
+      }
+    },
+    bodyRow: {
+      style: {
+        transition: 'all 0.2s ease'
+      }
+    },
+    bodyCell: {
+      style: {
+        padding: '16px',
+        borderBottom: '1px solid var(--greyborder)'
+      }
+    }
+  };
+
+  // Action Buttons PT
+  viewActionButtonPT = {
+    root: {
+      style: {
+        width: '32px',
+        height: '32px',
+        transition: 'all 0.2s ease'
+      }
+    }
+  };
+
+  editActionButtonPT = {
+    root: {
+      style: {
+        width: '32px',
+        height: '32px',
+        transition: 'all 0.2s ease'
+      }
+    }
+  };
+
+  deleteActionButtonPT = {
+    root: {
+      style: {
+        width: '32px',
+        height: '32px',
+        transition: 'all 0.2s ease'
+      }
+    }
+  };
+
+  // Card PT - Analytics
+  analyticsCardPT = {
+    root: {
+      style: {
+        borderRadius: '16px',
+        overflow: 'hidden',
+        border: 'none',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+        transition: 'all 0.3s ease'
+      }
+    },
+    header: {
+      style: {
+        background: 'linear-gradient(92.58deg, #00d1cf 0%, #0099c4 100%)',
+        padding: '20px'
+      }
+    },
+    title: {
+      style: {
+        color: 'white',
+        fontSize: '18px',
+        fontWeight: '700',
+        margin: '0'
+      }
+    },
+    subtitle: {
+      style: {
+        color: 'rgba(255, 255, 255, 0.8)',
+        fontSize: '14px'
+      }
+    },
+    body: {
+      style: {
+        padding: '0'
+      }
+    },
+    content: {
+      style: {
+        padding: '24px'
+      }
+    }
+  };
+
+  // Card PT - Revenue
+  revenueCardPT = {
+    root: {
+      style: {
+        borderRadius: '16px',
+        overflow: 'hidden',
+        border: 'none',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+        transition: 'all 0.3s ease'
+      }
+    },
+    header: {
+      style: {
+        background: 'linear-gradient(135deg, #3cc985 0%, #2da06b 100%)',
+        padding: '20px'
+      }
+    },
+    title: {
+      style: {
+        color: 'white',
+        fontSize: '18px',
+        fontWeight: '700',
+        margin: '0'
+      }
+    },
+    subtitle: {
+      style: {
+        color: 'rgba(255, 255, 255, 0.8)',
+        fontSize: '14px'
+      }
+    },
+    body: {
+      style: {
+        padding: '0'
+      }
+    },
+    content: {
+      style: {
+        padding: '24px'
+      }
+    }
+  };
+
+  // Card PT - Orders
+  ordersCardPT = {
+    root: {
+      style: {
+        borderRadius: '16px',
+        overflow: 'hidden',
+        border: 'none',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+        transition: 'all 0.3s ease'
+      }
+    },
+    header: {
+      style: {
+        background: 'linear-gradient(135deg, #efa64a 0%, #d4902f 100%)',
+        padding: '20px'
+      }
+    },
+    title: {
+      style: {
+        color: 'white',
+        fontSize: '18px',
+        fontWeight: '700',
+        margin: '0'
+      }
+    },
+    subtitle: {
+      style: {
+        color: 'rgba(255, 255, 255, 0.8)',
+        fontSize: '14px'
+      }
+    },
+    body: {
+      style: {
+        padding: '0'
+      }
+    },
+    content: {
+      style: {
+        padding: '24px'
+      }
+    }
   };
 
   cities = [
@@ -864,4 +842,3 @@ export class PassthroughDemoComponent {
     { id: '5', name: 'Apple Watch', category: 'Wearables', price: 399, status: 'In Stock' },
   ];
 }
-

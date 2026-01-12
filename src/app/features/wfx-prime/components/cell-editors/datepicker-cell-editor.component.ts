@@ -1,9 +1,10 @@
 // ============================================
 // PrimeNG DatePicker Cell Editor for AG Grid
 // Custom cell editor using PrimeNG DatePicker
+// Using PT (Pass Through) API for styling - NO ng-deep!
 // ============================================
 
-import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DatePicker } from 'primeng/datepicker';
 import { ICellEditorAngularComp } from 'ag-grid-angular';
@@ -23,7 +24,7 @@ import { ICellEditorParams } from 'ag-grid-community';
       appendTo="body"
       (onSelect)="onDateSelect()"
       (onClose)="onClose()"
-      styleClass="ag-cell-datepicker"
+      [pt]="datepickerPT"
     />
   `,
   styles: [`
@@ -31,24 +32,6 @@ import { ICellEditorParams } from 'ag-grid-community';
       display: block;
       width: 100%;
       height: 100%;
-    }
-
-    :host ::ng-deep {
-      .p-datepicker {
-        width: 100%;
-      }
-
-      .p-datepicker input {
-        width: 100%;
-        height: 100%;
-        border: none;
-        padding: 0 8px;
-        font-size: 14px;
-      }
-
-      .ag-cell-datepicker {
-        width: 100%;
-      }
     }
   `]
 })
@@ -58,6 +41,43 @@ export class DatePickerCellEditorComponent implements ICellEditorAngularComp, Af
   value: Date | null = null;
   dateFormat = 'mm/dd/yy';
   private params!: ICellEditorParams;
+
+  // PT (Pass Through) configuration for DatePicker styling
+  datepickerPT = {
+    root: {
+      style: {
+        width: '100%'
+      }
+    },
+    pcInput: {
+      root: {
+        style: {
+          width: '100%',
+          height: '100%',
+          border: '2px solid var(--color-primary)',
+          borderRadius: '4px',
+          padding: '0 8px',
+          fontSize: '14px',
+          outline: 'none',
+          boxSizing: 'border-box'
+        }
+      }
+    },
+    dropdown: {
+      root: {
+        style: {
+          background: 'var(--color-primary)',
+          borderColor: 'var(--color-primary)'
+        }
+      }
+    },
+    panel: {
+      style: {
+        borderRadius: '8px',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
+      }
+    }
+  };
 
   agInit(params: ICellEditorParams): void {
     this.params = params;
@@ -106,4 +126,3 @@ export class DatePickerCellEditorComponent implements ICellEditorAngularComp, Af
     return false;
   }
 }
-

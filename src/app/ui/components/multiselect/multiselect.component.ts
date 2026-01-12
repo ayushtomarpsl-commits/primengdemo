@@ -1,6 +1,7 @@
 // ============================================
 // UI MultiSelect Component
 // PrimeNG MultiSelect wrapper - upgrade-safe abstraction
+// Using PT (Pass Through) for styling - NO ng-deep!
 // ============================================
 
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, forwardRef } from '@angular/core';
@@ -33,14 +34,12 @@ export interface MultiSelectOption<T = unknown> {
       [display]="display"
       [styleClass]="styleClass"
       (onChange)="onChange.emit($event)"
+      [pt]="multiSelectPT"
     />
   `,
   styles: [`
     :host {
       display: block;
-    }
-    :host ::ng-deep .p-multiselect {
-      width: 100%;
     }
   `],
   providers: [
@@ -69,6 +68,15 @@ export class MultiSelectComponent<T = unknown> implements ControlValueAccessor {
 
   value: T[] = [];
 
+  // PT (Pass Through) for styling - replaces ::ng-deep
+  multiSelectPT = {
+    root: {
+      style: {
+        width: '100%'
+      }
+    }
+  };
+
   private onChangeFn: (value: T[]) => void = () => {};
   private onTouchedFn: () => void = () => {};
 
@@ -94,4 +102,3 @@ export class MultiSelectComponent<T = unknown> implements ControlValueAccessor {
     this.onTouchedFn();
   }
 }
-

@@ -1,6 +1,7 @@
 // ============================================
 // UI InputNumber Component
 // PrimeNG InputNumber wrapper - upgrade-safe abstraction
+// Using PT (Pass Through) for styling - NO ng-deep!
 // ============================================
 
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, forwardRef } from '@angular/core';
@@ -33,14 +34,12 @@ import { InputNumberModule } from 'primeng/inputnumber';
       [inputStyleClass]="'w-full'"
       (onBlur)="handleBlur($event)"
       (onFocus)="handleFocus($event)"
+      [pt]="inputNumberPT"
     />
   `,
   styles: [`
     :host {
       display: block;
-    }
-    :host ::ng-deep .p-inputnumber {
-      width: 100%;
     }
   `],
   providers: [
@@ -73,6 +72,15 @@ export class InputNumberComponent implements ControlValueAccessor {
   @Output() onFocus = new EventEmitter<Event>();
 
   value: number | null = null;
+
+  // PT (Pass Through) for styling - replaces ::ng-deep
+  inputNumberPT = {
+    root: {
+      style: {
+        width: '100%'
+      }
+    }
+  };
 
   private onChangeFn: (value: number | null) => void = () => {};
   private onTouchedFn: () => void = () => {};
@@ -107,4 +115,3 @@ export class InputNumberComponent implements ControlValueAccessor {
     this.onFocus.emit(event);
   }
 }
-

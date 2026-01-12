@@ -1,6 +1,7 @@
 // ============================================
 // PrimeNG InputText Cell Editor for AG Grid
 // Custom cell editor using PrimeNG InputText
+// Using CSS variables for theming - NO ng-deep!
 // ============================================
 
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
@@ -20,7 +21,7 @@ import { ICellEditorParams } from 'ag-grid-community';
       pInputText
       [(ngModel)]="value"
       (keydown)="onKeyDown($event)"
-      class="cell-input"
+      [style]="inputStyle"
     />
   `,
   styles: [`
@@ -29,22 +30,6 @@ import { ICellEditorParams } from 'ag-grid-community';
       width: 100%;
       height: 100%;
     }
-
-    .cell-input {
-      width: 100%;
-      height: 100%;
-      border: 2px solid #3b82f6;
-      border-radius: 4px;
-      padding: 0 8px;
-      font-size: 14px;
-      outline: none;
-      box-sizing: border-box;
-
-      &:focus {
-        border-color: #2563eb;
-        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-      }
-    }
   `]
 })
 export class InputCellEditorComponent implements ICellEditorAngularComp, AfterViewInit {
@@ -52,6 +37,20 @@ export class InputCellEditorComponent implements ICellEditorAngularComp, AfterVi
   
   value: string = '';
   private params!: ICellEditorParams;
+
+  // Inline style object for the input - using CSS variables for theming
+  inputStyle = {
+    width: '100%',
+    height: '100%',
+    border: '2px solid var(--color-primary)',
+    borderRadius: '4px',
+    padding: '0 8px',
+    fontSize: '14px',
+    outline: 'none',
+    boxSizing: 'border-box',
+    background: 'var(--surface-card)',
+    color: 'var(--darkgrey)'
+  };
 
   agInit(params: ICellEditorParams): void {
     this.params = params;
@@ -97,4 +96,3 @@ export class InputCellEditorComponent implements ICellEditorAngularComp, AfterVi
     return false;
   }
 }
-

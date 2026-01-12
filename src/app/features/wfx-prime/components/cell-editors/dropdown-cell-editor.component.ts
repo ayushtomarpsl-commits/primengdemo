@@ -1,6 +1,7 @@
 // ============================================
 // PrimeNG Dropdown Cell Editor for AG Grid
 // Custom cell editor using PrimeNG Select/Dropdown
+// Using PT (Pass Through) API for styling - NO ng-deep!
 // ============================================
 
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
@@ -33,8 +34,8 @@ interface DropdownCellEditorParams extends ICellEditorParams {
       appendTo="body"
       [showClear]="false"
       (onChange)="onSelect()"
-      styleClass="ag-cell-dropdown"
       placeholder="Select..."
+      [pt]="selectPT"
     />
   `,
   styles: [`
@@ -42,24 +43,6 @@ interface DropdownCellEditorParams extends ICellEditorParams {
       display: block;
       width: 100%;
       height: 100%;
-    }
-
-    :host ::ng-deep {
-      .p-select {
-        width: 100%;
-        height: 100%;
-        border: 2px solid #3b82f6;
-        border-radius: 4px;
-      }
-
-      .ag-cell-dropdown {
-        width: 100%;
-      }
-
-      .p-select .p-select-label {
-        padding: 0 8px;
-        font-size: 14px;
-      }
     }
   `]
 })
@@ -69,6 +52,60 @@ export class DropdownCellEditorComponent implements ICellEditorAngularComp, Afte
   value: string = '';
   options: DropdownOption[] = [];
   private params!: DropdownCellEditorParams;
+
+  // PT (Pass Through) configuration for Select/Dropdown styling
+  selectPT = {
+    root: {
+      style: {
+        width: '100%',
+        height: '100%',
+        border: '2px solid var(--color-primary)',
+        borderRadius: '4px',
+        background: 'var(--surface-card)'
+      }
+    },
+    label: {
+      style: {
+        padding: '0 8px',
+        fontSize: '14px',
+        color: 'var(--darkgrey)',
+        display: 'flex',
+        alignItems: 'center'
+      }
+    },
+    dropdown: {
+      style: {
+        background: 'var(--color-primary)',
+        color: 'white',
+        borderRadius: '0 2px 2px 0'
+      }
+    },
+    listContainer: {
+      style: {
+        borderRadius: '8px',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+        border: '1px solid var(--greyborder)'
+      }
+    },
+    list: {
+      style: {
+        padding: '4px'
+      }
+    },
+    option: {
+      style: {
+        padding: '8px 12px',
+        borderRadius: '4px',
+        fontSize: '14px',
+        color: 'var(--darkgrey)'
+      }
+    },
+    optionGroup: {
+      style: {
+        fontWeight: '600'
+      }
+    }
+  };
 
   agInit(params: DropdownCellEditorParams): void {
     this.params = params;
@@ -117,4 +154,3 @@ export class DropdownCellEditorComponent implements ICellEditorAngularComp, Afte
     return false;
   }
 }
-

@@ -183,62 +183,6 @@ interface ErrorResolutionData {
       height: 600px;
       transition: all 0.3s ease;
     }
-
-    :host ::ng-deep {
-      .status-success {
-        background: #dcfce7;
-        color: #166534;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 500;
-      }
-
-      .status-error {
-        background: #fee2e2;
-        color: #991b1b;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 500;
-      }
-
-      .status-pending {
-        background: #fef3c7;
-        color: #92400e;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 500;
-      }
-
-      .error-cell {
-        color: #991b1b;
-        font-weight: 500;
-      }
-
-      // Editable cell indicator
-      .editable-cell {
-        // background: linear-gradient(135deg, transparent 85%, #6366f1 85%) !important;
-        cursor: pointer;
-
-        // &:hover {
-        //   background: linear-gradient(135deg, #f1f5f9 85%, #6366f1 85%) !important;
-        // }
-      }
-
-      // AG Grid cell editor popup styling
-      .ag-cell-edit-wrapper {
-        padding: 0;
-      }
-
-      .ag-popup-editor {
-        border: none;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        border-radius: 6px;
-        overflow: visible;
-      }
-    }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -316,10 +260,39 @@ export class WfxPrimeComponent implements OnInit {
   readonly error = signal<string | null>(null);
   
   // GUID from query params
-  private guid = '';
+  private guid = 'bc7080e0-1afb-4ee3-b639-23eb0cfe185d_1LXy6u';
 
   // API Configuration
   private readonly API_URL = 'https://wfxqa.worldfashionexchange.com/WFXDotNetCoreAPI/WFXWebAIAPI/api/WFXAI/GetErrorResolutionData';
+
+  // ============================================
+  // Helper method for status badge with INLINE STYLES
+  // No ::ng-deep needed! Styles are embedded in HTML
+  // ============================================
+  private getStatusBadgeHtml(value: string, type: 'completion' | 'status' = 'status'): string {
+    const status = value?.toLowerCase();
+    
+    // Define inline styles for each status type
+    const styles = {
+      success: 'background:#dcfce7;color:#166534;padding:0px 12px;border-radius:20px;font-size:12px;font-weight:500;display:inline-block;',
+      error: 'background:#fee2e2;color:#991b1b;padding:0px 12px;border-radius:20px;font-size:12px;font-weight:500;display:inline-block;',
+      pending: 'background:#fef3c7;color:#92400e;padding:0px 12px;border-radius:20px;font-size:12px;font-weight:500;display:inline-block;',
+    };
+
+    let badgeStyle: string;
+    
+    if (type === 'completion') {
+      // For status like 'completed', 'failed', 'pending'
+      badgeStyle = status === 'completed' ? styles.success : 
+                   status === 'failed' ? styles.error : styles.pending;
+    } else {
+      // For status like 'success', 'failed', 'pending'
+      badgeStyle = status === 'success' ? styles.success : 
+                   status === 'failed' ? styles.error : styles.pending;
+    }
+
+    return `<span style="${badgeStyle}">${value || ''}</span>`;
+  }
 
   // Column definitions based on API response structure
   // Using PrimeNG components for cell editing
@@ -338,8 +311,7 @@ export class WfxPrimeComponent implements OnInit {
       filter: 'agTextColumnFilter',
       // ✅ EDITABLE with PrimeNG InputText
       editable: true,
-      cellEditor: InputCellEditorComponent,
-      cellClass: 'editable-cell'
+      cellEditor: InputCellEditorComponent
     },
     { 
       field: 'filetype', 
@@ -357,12 +329,7 @@ export class WfxPrimeComponent implements OnInit {
       field: 'status', 
       headerName: 'Status',
       width: 140,
-      cellRenderer: (params: { value: string }) => {
-        const status = params.value?.toLowerCase();
-        const statusClass = status === 'completed' ? 'status-success' : 
-                           status === 'failed' ? 'status-error' : 'status-pending';
-        return `<span class="${statusClass}">${params.value || ''}</span>`;
-      },
+      cellRenderer: (params: { value: string }) => this.getStatusBadgeHtml(params.value, 'completion'),
       filter: 'agTextColumnFilter',
       // ✅ EDITABLE with PrimeNG Dropdown
       editable: true,
@@ -374,19 +341,13 @@ export class WfxPrimeComponent implements OnInit {
           { label: 'Failed', value: 'failed' },
           { label: 'In Progress', value: 'in_progress' }
         ]
-      },
-      cellClass: 'editable-cell'
+      }
     },
     { 
       field: 'TransactionStatus', 
       headerName: 'Transaction Status',
       width: 160,
-      cellRenderer: (params: { value: string }) => {
-        const status = params.value?.toLowerCase();
-        const statusClass = status === 'success' ? 'status-success' : 
-                           status === 'failed' ? 'status-error' : 'status-pending';
-        return `<span class="${statusClass}">${params.value || ''}</span>`;
-      },
+      cellRenderer: (params: { value: string }) => this.getStatusBadgeHtml(params.value, 'status'),
       filter: 'agTextColumnFilter',
       // ✅ EDITABLE with PrimeNG Dropdown
       editable: true,
@@ -397,56 +358,37 @@ export class WfxPrimeComponent implements OnInit {
           { label: 'Failed', value: 'Failed' },
           { label: 'Pending', value: 'Pending' }
         ]
-      },
-      cellClass: 'editable-cell'
+      }
     },
     { 
       field: 'DataImported', 
       headerName: 'Data Imported',
       width: 140,
-      cellRenderer: (params: { value: string }) => {
-        const status = params.value?.toLowerCase();
-        const statusClass = status === 'success' ? 'status-success' : 
-                           status === 'failed' ? 'status-error' : 'status-pending';
-        return `<span class="${statusClass}">${params.value || ''}</span>`;
-      },
+      cellRenderer: (params: { value: string }) => this.getStatusBadgeHtml(params.value, 'status'),
       filter: 'agTextColumnFilter',
       // ✅ EDITABLE with PrimeNG Dropdown
       editable: true,
-      cellEditor: DropdownCellEditorComponent,
-      cellClass: 'editable-cell'
+      cellEditor: DropdownCellEditorComponent
     },
     { 
       field: 'DataValidated', 
       headerName: 'Data Validated',
       width: 140,
-      cellRenderer: (params: { value: string }) => {
-        const status = params.value?.toLowerCase();
-        const statusClass = status === 'success' ? 'status-success' : 
-                           status === 'failed' ? 'status-error' : 'status-pending';
-        return `<span class="${statusClass}">${params.value || ''}</span>`;
-      },
+      cellRenderer: (params: { value: string }) => this.getStatusBadgeHtml(params.value, 'status'),
       filter: 'agTextColumnFilter',
       // ✅ EDITABLE with PrimeNG Dropdown
       editable: true,
-      cellEditor: DropdownCellEditorComponent,
-      cellClass: 'editable-cell'
+      cellEditor: DropdownCellEditorComponent
     },
     { 
       field: 'MappingResolved', 
       headerName: 'Mapping Resolved',
       width: 160,
-      cellRenderer: (params: { value: string }) => {
-        const status = params.value?.toLowerCase();
-        const statusClass = status === 'success' ? 'status-success' : 
-                           status === 'failed' ? 'status-error' : 'status-pending';
-        return `<span class="${statusClass}">${params.value || ''}</span>`;
-      },
+      cellRenderer: (params: { value: string }) => this.getStatusBadgeHtml(params.value, 'status'),
       filter: 'agTextColumnFilter',
       // ✅ EDITABLE with PrimeNG Dropdown
       editable: true,
-      cellEditor: DropdownCellEditorComponent,
-      cellClass: 'editable-cell'
+      cellEditor: DropdownCellEditorComponent
     },
     { 
       field: 'uploadedOn', 
@@ -474,7 +416,8 @@ export class WfxPrimeComponent implements OnInit {
       field: 'TransactionType', 
       headerName: 'Transaction Type',
       width: 140,
-      filter: 'agTextColumnFilter'
+      filter: 'agTextColumnFilter',
+      editable: true,
     },
     { 
       field: 'MasterPackageName', 
@@ -505,7 +448,8 @@ export class WfxPrimeComponent implements OnInit {
       headerName: 'Error Message',
       flex: 1,
       minWidth: 200,
-      cellClass: (params) => params.value ? 'error-cell editable-cell' : 'editable-cell',
+      // Using cellStyle instead of cellClass - NO ng-deep needed!
+      cellStyle: (params) => params.value ? { color: '#991b1b', fontWeight: '500' } : null,
       filter: 'agTextColumnFilter',
       // ✅ EDITABLE with PrimeNG InputText
       editable: true,
@@ -523,7 +467,7 @@ export class WfxPrimeComponent implements OnInit {
   ngOnInit(): void {
     // Get GUID from query parameters
     this.route.queryParams.subscribe(params => {
-      this.guid = params['GUID'] || params['guid'] || '';
+      this.guid = params['GUID'] || params['guid'] || 'bc7080e0-1afb-4ee3-b639-23eb0cfe185d_1LXy6u';
       
       if (this.guid) {
         this.fetchData();
