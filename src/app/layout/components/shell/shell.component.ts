@@ -63,6 +63,7 @@ export class ShellComponent {
     { label: 'Forms', icon: 'pi pi-file-edit', route: '/forms' },
     { label: 'Passthrough', icon: 'pi pi-sliders-h', route: '/passthrough' },
     { label: 'WFX Prime', icon: 'pi pi-table', route: '/wfx-prime' },
+    { label: 'WFX Library', icon: 'pi pi-box', route: '/wfx-library-test' },
     { label: 'Settings', icon: 'pi pi-cog', route: '/settings' },
   ];
 

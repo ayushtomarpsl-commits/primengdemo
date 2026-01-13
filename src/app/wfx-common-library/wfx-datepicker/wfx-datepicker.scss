@@ -1,0 +1,14 @@
+// WfxDatePicker Styles
+// This component uses PrimeNG's built-in styling via PT (Pass Through)
+
+:host {
+  display: inline-block;
+}
+
+// When fluid is enabled, make host full width
+:host([fluid="true"]),
+:host-context(.wfx-datepicker-fluid) {
+  display: block;
+  width: 100%;
+}
+

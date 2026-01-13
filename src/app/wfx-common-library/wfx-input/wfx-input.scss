@@ -1,0 +1,19 @@
+// WfxInput Styles
+// This component uses PrimeNG's built-in styling via PT (Pass Through)
+// Add any custom wrapper styles here if needed
+
+:host {
+  display: inline-block;
+}
+
+// When fluid is enabled, make host full width
+:host([fluid="true"]),
+:host-context(.wfx-input-fluid) {
+  display: block;
+  width: 100%;
+  
+  input {
+    width: 100%;
+  }
+}
+

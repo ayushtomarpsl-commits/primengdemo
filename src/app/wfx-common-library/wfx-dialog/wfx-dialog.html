@@ -1,0 +1,52 @@
+<p-dialog
+  [visible]="visible"
+  [header]="header"
+  [position]="position"
+  [draggable]="draggable"
+  [resizable]="resizable"
+  [modal]="modal"
+  [closeOnEscape]="closeOnEscape"
+  [dismissableMask]="dismissableMask"
+  [closable]="closable"
+  [maximizable]="maximizable"
+  [blockScroll]="blockScroll"
+  [keepInViewport]="keepInViewport"
+  [focusTrap]="focusTrap"
+  [focusOnShow]="focusOnShow"
+  [showHeader]="showHeader"
+  [closeIcon]="closeIcon"
+  [closeAriaLabel]="closeAriaLabel"
+  [minimizeIcon]="minimizeIcon"
+  [maximizeIcon]="maximizeIcon"
+  [style]="style"
+  [styleClass]="styleClass"
+  [contentStyle]="contentStyle"
+  [contentStyleClass]="contentStyleClass"
+  [maskStyleClass]="maskStyleClass"
+  [maskStyle]="maskStyle"
+  [autoZIndex]="autoZIndex"
+  [baseZIndex]="baseZIndex"
+  [minX]="minX"
+  [minY]="minY"
+  [breakpoints]="breakpoints"
+  [appendTo]="appendTo"
+  [pt]="pt"
+  [ptOptions]="ptOptions"
+  [dt]="dt"
+  [unstyled]="unstyled"
+  (visibleChange)="handleVisibleChange($event)"
+  (onShow)="handleShow($event)"
+  (onHide)="handleHide($event)"
+  (onResizeInit)="handleResizeInit($event)"
+  (onResizeEnd)="handleResizeEnd($event)"
+  (onDragEnd)="handleDragEnd($event)"
+  (onMaximize)="handleMaximize($event)"
+>
+  <ng-template pTemplate="header">
+    <ng-content select="[wfx-dialog-header]"></ng-content>
+  </ng-template>
+  <ng-content></ng-content>
+  <ng-template pTemplate="footer">
+    <ng-content select="[wfx-dialog-footer]"></ng-content>
+  </ng-template>
+</p-dialog>

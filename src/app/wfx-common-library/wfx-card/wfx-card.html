@@ -1,0 +1,24 @@
+<p-card
+  [header]="header"
+  [subheader]="subheader"
+  [style]="style"
+  [styleClass]="styleClass"
+  [pt]="pt"
+  [ptOptions]="ptOptions"
+  [dt]="dt"
+  [unstyled]="unstyled"
+>
+  <ng-template pTemplate="header">
+    <ng-content select="[wfx-card-header]"></ng-content>
+  </ng-template>
+  <ng-template pTemplate="title">
+    <ng-content select="[wfx-card-title]"></ng-content>
+  </ng-template>
+  <ng-template pTemplate="subtitle">
+    <ng-content select="[wfx-card-subtitle]"></ng-content>
+  </ng-template>
+  <ng-content></ng-content>
+  <ng-template pTemplate="footer">
+    <ng-content select="[wfx-card-footer]"></ng-content>
+  </ng-template>
+</p-card>
